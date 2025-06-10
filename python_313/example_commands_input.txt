@@ -1,0 +1,39 @@
+1. Cloudflare Check
+    python SiteBroker.py dima.com --cloudflare
+
+2. Crawler Options
+    python SiteBroker.py dima.com --crawler google
+    python SiteBroker.py dima.com --crawler bing
+    python SiteBroker.py dima.com --crawler manual
+    python SiteBroker.py dima.com --crawler all
+
+3. Reverse IP Options
+    python SiteBroker.py dima.com --reverse-ip ht
+    python SiteBroker.py dima.com --reverse-ip ygs
+    python SiteBroker.py dima.com --reverse-ip all
+
+4. Information Gathering Options
+    python SiteBroker.py dima.com --info whois
+    python SiteBroker.py dima.com --info browserspy
+    python SiteBroker.py dima.com --info all
+
+5. Nameservers
+    python SiteBroker.py dima.com --nameservers
+
+6. Website Speed
+    python SiteBroker.py dima.com --speed
+
+7. Subdomains
+    python SiteBroker.py dima.com --subdomains
+
+8. Shells
+    python SiteBroker.py dima.com --shells
+
+9. Admin Panels
+    python SiteBroker.py dima.com --admin
+
+10. Banner
+    python SiteBroker.py dima.com --banner
+
+11. All Scans
+    python SiteBroker.py dima.com --all
