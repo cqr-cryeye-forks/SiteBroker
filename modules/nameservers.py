@@ -1,11 +1,15 @@
+from dns.resolver import resolve, NXDOMAIN, Timeout
+
+from insides.functions import removeHTTP
 
 
-from insides.colors 	import *
-from insides.functions 	import write, removeHTTP, addHTTP
-from dns.resolver 		import query as Nameservers
-
-def nameServers(website):
-	website = removeHTTP(website)
-	res = Nameservers(website, 'NS')
-	for nameservers in res:
-		write(var="#", color=c, data=nameservers)
+def nameServers(website: str) -> dict:
+    result = {"nameservers": []}
+    website = removeHTTP(website)
+    try:
+        res = resolve(website, 'NS')
+        for ns in res:
+            result["nameservers"].append(str(ns))
+    except (Timeout, NXDOMAIN) as e:
+        result["error"] = f"DNS resolution failed: {str(e)}"
+    return result

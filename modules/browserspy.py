@@ -1,18 +1,21 @@
+import re
+
+import requests
+from requests.exceptions import RequestException
+
+from insides.constants import browserspy_url
+from insides.functions import headers, removeHTTP
 
 
-from insides.colors 	import *
-from bs4 				import BeautifulSoup
-from insides.functions 	import _headers, write, Request, removeHTTP, addHTTP
-import re, 		 os
-import requests, json
-
-def browserspyRep(website):
-	url = "http://browserspy.dk/webserver.php"
-	_data = {
-		'server': removeHTTP(website)
-	}
-	request = requests.post(url, headers=_headers, data=_data).text.encode('UTF-8')
-	_data = re.findall(r'<tr class="(.*)">\n<td class="property">(.*)</td>\n<td class="value">(.*)</td>\n</tr>', request)
-	for res in _data:
-		result = res[1].capitalize() + ": " + res[2]
-		write(var="#", color=c, data=result)
+def browserspyRep(website: str) -> dict:
+    result = {"server_info": {}}
+    url = browserspy_url
+    try:
+        response = requests.post(url, headers=headers, data={"server": removeHTTP(website)}, timeout=5)
+        matches = re.findall(r'<tr class=".*?">\n<td class="property">(.*?)</td>\n<td class="value">(.*?)</td>',
+                             response.text)
+        for prop, value in matches:
+            result["server_info"][prop] = value
+    except RequestException as e:
+        result["error"] = f"BrowserSpy request failed: {str(e)}"
+    return result

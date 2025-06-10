@@ -1,25 +1,29 @@
+import socket
+import time
+from urllib.parse import urlparse
+
+import requests
+from requests.exceptions import RequestException
+
+from insides.colors import colors
+from insides.functions import headers, write, addHTTP
 
 
-from insides.colors     import *
-from insides.functions  import _headers, write, Request, addHTTP
-import requests, re
-import socket, time, urllib, urlparse, optparse
-
-def websiteSpeed(website):
+def websiteSpeed(website: str) -> dict:
+    result = {}
     website = addHTTP(website)
-    urlinfo = urlparse.urlparse(website)
+    try:
+        # DNS resolution time
+        start = time.time()
+        socket.gethostbyname(urlparse(website).netloc)
+        result["dns_time"] = time.time() - start
 
-    start = time.time()
-    ip = socket.gethostbyname( urlinfo.netloc )
-    dns_tm = time.time()-start
-    _dns = "{:<10}:{:>40} seconds".format(" DNS", dns_tm )
-    write(var="~", color=g, data=_dns)
-
-    start = time.time()
-    _data = urllib.urlopen(website).read()
-    load_tm = time.time()-start
-    _load = "{:<10}:{:>40} seconds".format(" Load", load_tm )
-    _wo = "{:<10}:{:>40} seconds".format(" W/O DNS", load_tm-dns_tm )
-    
-    write(var="#", color=c, data=_load)
-    write(var="~", color=g, data=_wo)
+        # Full load time
+        start = time.time()
+        requests.get(website, headers=headers, timeout=5).content
+        load_time = time.time() - start
+        result["load_time"] = load_time
+        result["without_dns"] = load_time - result["dns_time"]
+    except (socket.gaierror, RequestException) as e:
+        result["error"] = f"Speed test failed: {str(e)}"
+    return result

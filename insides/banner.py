@@ -1,6 +1,12 @@
-from colors import fg, fb, fy, fr, fc, sb
+from insides.colors import colors
 
-banner = """
+green = colors.fg + colors.sb
+blue = colors.fb + colors.sb
+yellow = colors.fy + colors.sb
+red = colors.fr + colors.sb
+cyan = colors.fc + colors.sb
+
+banner = f"""
 {green}  /$$$$$$  /$$   /$$               /$$$$$$$                      /$$                          
  /$$__  $$|__/  | $$              | $$__  $$                    | $$                          
 | $$  \__/ /$$ /$$$$$$    /$$$$$$ | $$  \ $$  /$$$$$$   /$$$$$$ | $$   /$$  /$$$$$$   /$$$$$$ 
@@ -10,10 +16,4 @@ banner = """
 |  $$$$$$/| $$  |  $$$$/|  $$$$$$$| $$$$$$$/| $$      |  $$$$$$/| $$ \  $$|  $$$$$$$| $$      
  \______/ |__/   \___/   \_______/|_______/ |__/       \______/ |__/  \__/ \_______/|__/  {blue}~ By Syed Umar Arfeen (An0n 3xPloiTeR)
 
-{yellow}Greetz ~ {red}Makman <3{green} | Jokr HaXoR{yellow} | An0nGuy{blue} | Shariq Malik{cyan} | r0oth3x49{yellow} | inj3ctor 0sman""".format(
-    green=fg + sb,
-    blue=fb + sb,
-    yellow=fy + sb,
-    red=fr + sb,
-    cyan=fc + sb,
-)
+{yellow}Greetz ~ {red}Makman <3{green} | Jokr HaXoR{yellow} | An0nGuy{blue} | Shariq Malik{cyan} | r0oth3x49{yellow} | inj3ctor 0sman"""

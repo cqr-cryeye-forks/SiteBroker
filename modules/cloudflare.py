@@ -1,39 +1,24 @@
+import re
+
+import requests
+from requests.exceptions import RequestException
+
+from insides.constants import cloudflare_api_url, crimeflare_url, headers
+from insides.functions import Request
 
 
-import requests, re
-from insides.colors import *
-from insides.functions import _headers, write, Request
-
-def cloudflare(website, _verbose=None):
-    if _verbose != None:
-        write(var="#", color=c, data="Checking For Cloudflare In " + website)
-    combo = ("http://api.hackertarget.com/httpheaders/?q=" + str(website))
-    request = Request(combo, _timeout=3, _encode=True)
-    if "cloudflare" in request:
-        if _verbose != None:
-            write(var="~", color=g, data="Cloudflare Found!\n")
-            write(var="#", color=y, data="Trying To Bypass Cloudflare!\n")
-        req = "http://www.crimeflare.biz/cgi-bin/cfsearch.cgi"
-        pos = {'cfS': website}
-        res = requests.post(req, headers=_headers, data=pos).text.encode('utf-8')
-        real_ip = None
-        if re.findall(r'\d+\.\d+\.\d+\.\d+', res):
-            reg = re.findall(r'\d+\.\d+\.\d+\.\d+', res)
-            real_ip = reg[1]
-        else:
-            write(var="!", color=r, data="Sorry! Cloudflare Wasn't Bypassed :')")
-        request = Request("http://" + str(real_ip), _timeout=3, _encode=True)
-        if not "cloudflare" in request.lower():
-            if _verbose != None:
-                if real_ip != None:
-                    write(var="@", color=c, data="Cloudflare Bypassed!")
-                    write(var="~", color=g, data="Real IP --> " + fc +str(real_ip))
-            return(str(real_ip))
-        else:
-            if _verbose != None:
-                write(var="!", color=r, data="Sorry! Cloudflare Wasn't Bypassed :')")
-    else:
-        if _verbose != None:
-            write(var="$", color=b, data=website + " Is not using Cloudflare!")
-
-# cloudflare("http://mukarramkhalid.com")
+def cloudflare(website: str) -> dict:
+    result = {"protected": False, "real_ip": None}
+    try:
+        response = Request(f"{cloudflare_api_url}{website}", _timeout=3, _encode=True)
+        if response and "cloudflare" in response.lower():
+            result["protected"] = True
+            # Attempt bypass
+            post_data = {"cfS": website}
+            bypass_resp = requests.post(crimeflare_url, headers=headers, data=post_data, timeout=5).text
+            ip_match = re.search(r"\d+\.\d+\.\d+\.\d+", bypass_resp)
+            if ip_match:
+                result["real_ip"] = ip_match.group(0)
+    except RequestException:
+        pass
+    return result

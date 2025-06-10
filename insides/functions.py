@@ -1,93 +1,60 @@
-
-
-from insides.colors import *
-import requests
 import re
+from typing import Optional, Union
+import requests
+from requests.exceptions import RequestException
 
-_headers = {
-    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'Accept-Encoding': 'gzip,deflate,sdch',
-    'Accept-Language': 'en-US,en;q=0.8',
-    'Connection': 'keep-alive'
-}
+from insides.colors import colors
+from insides.constants import url_pattern, wrong_URL, empty_Website, headers
 
-empty_Website = "\n\t{red}[=] Please Enter A Website :/\n\t\t{cyan}~ An0n 3xPloiTeR :)".format(red=r, cyan=c)
 
-wrong_URL = "\n\t{red}[=] Please Enter a Valid And Correct URL (i.e, hackthissite.org, hack.me)\n\t\t{cyan}~ An0n 3xPloiTeR :)".format(red=r, cyan=c)
-
-str_Index = "\n\t{red}[=] Please Input a Integer (i.e, 1, 2, 3) :\\\n\t\t{cyan}~ An0n 3xPloiTeR :)".format(red=r, cyan=c)
-
-val_Select = "\t{}[$] Please Use The Index Value From The List\n\t\t[+] Not By Your Own :/\n\t\t\t ~ An0n 3xPloiTeR  \n".format(r)
-
-def webNotEmpty(website):
-    """
-    Check Whether if the website is empty or not and return valid / !valid
-    """
+def webNotEmpty(website: str) -> str:
     if len(website) >= 1:
         return "valid"
-    else:
-        return "!valid"
+    return "!valid"
 
-def validWebsite(website):
-    """
-    Checks With a Regex If The URL Entered Is Correct Or Not! (User can use IP Too :)
-    """
+def validWebsite(website: str) -> None:
     web = webNotEmpty(website)
-    if web is "valid":
-        if not (re.match(r"(^(http://|https://)?([a-z0-9][a-z0-9-]*\.)+[a-z0-9][a-z0-9-]*$)", website)):
-            exit(wrong_URL)
+    if web == "valid":
+        if not re.match(url_pattern, website):
+            raise ValueError(wrong_URL)
     else:
-        exit(empty_Website)
+        raise ValueError(empty_Website)
 
-def cleanURL(website):
-    """
-    Removes ["http://", "http://www.", "https://", "https://www.", "www."] from the start of the Url!
-    """
-    web = validWebsite(website)
+def cleanURL(website: str) -> str:
+    validWebsite(website)
     website = website.replace("http://", "")
     website = website.replace("http://www.", "")
     website = website.replace("https://", "")
     website = website.replace("https://www.", "")
-    website = website.replace("www.", ""); return(website)
+    website = website.replace("www.", "")
+    return website
 
-def removeHTTP(website):
-    """
-    Removes ["http://", "http://www.", "https://", "https://www.", "www."] from the start of the Url and returns it!
-    """
-    website = cleanURL(website); return(website)
+def removeHTTP(website: str) -> str:
+    return cleanURL(website)
 
-def addHTTP(website):
-    """
-    Removes ["http://", "http://www.", "https://", "https://www.", "www."] from the start of the Url and add a "http://" in the start again and return it!
-    """
-    website = cleanURL(website)
-    website = ("http://" + website); return(website)
+def addHTTP(website: str) -> str:
+    return f"http://{cleanURL(website)}"
 
-def write(var, color, data):
-    if var == None:
-        print(color + str(data))
-    elif var != None:
-        print("{white}[{green}" + var + "{white}] " + color + str(data)).format(
-        	white=w, green=g
-    	)
+def write(var: Optional[str], color: str, data: str) -> None:
+    if var is None:
+        print(f"{color}{data}")
+    else:
+        print(f"{colors.w}[{colors.g}{var}{colors.w}] {color}{data}")
 
-def Request(website, _timeout=None, _encode=None):
-    """
-    For Getting The Page Source || Source Code Of The Website Given.
-    """
+def Request(website: str, _timeout: Optional[int] = None, _encode: Optional[bool] = None) -> Optional[Union[str, bytes]]:
     try:
-        if _encode == None:
-            return requests.get(website, headers=_headers, timeout=_timeout).content
-        elif _encode == True:
-            return requests.get(website, headers=_headers, timeout=_timeout).text.encode('utf-8')
+        response = requests.get(website, headers=headers, timeout=_timeout)
+        response.raise_for_status()
+        if _encode is None:
+            return response.content
+        elif _encode:
+            return response.text.encode('utf-8')
+        return response.text
     except requests.exceptions.MissingSchema:
-        pass
+        return None
     except requests.exceptions.ContentDecodingError:
-        pass
+        return None
     except requests.exceptions.ConnectionError:
-        return fg + sb + "\n[$] Err0r: Sorry! You Entered A Wrong Website 0r Website Is 0ff"
-        pass
-    except Exception as e:
-        return fc + sb + "[$] Err0r: " + fg + sb + str(e)
-        pass
+        return f"{colors.fg}{colors.sb}\n[$] Error: The website is either incorrect or down."
+    except RequestException as e:
+        return f"{colors.fc}{colors.sb}[$] Error: {colors.fg}{colors.sb}{str(e)}"

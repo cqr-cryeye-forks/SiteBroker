@@ -1,13 +1,13 @@
 import re
 
-from python_313.insides.colors import r, c
+from insides.colors import colors
 
 url_pattern = re.compile(r"(^(http://|https://)?([a-z0-9][a-z0-9-]*\.)+[a-z0-9][a-z0-9-]*$)")
 
-empty_Website: str = f"\n\t{r}[=] Please Enter A Website :/\n\t\t{c}~ An0n 3xPloiTeR :)"
-wrong_URL: str = f"\n\t{r}[=] Please Enter a Valid And Correct URL (i.e, hackthissite.org, hack.me)\n\t\t{c}~ An0n 3xPloiTeR :)"
-str_Index: str = f"\n\t{r}[=] Please Input a Integer (i.e, 1, 2, 3) :\\\n\t\t{c}~ An0n 3xPloiTeR :)"
-val_Select: str = f"\t{r}[$] Please Use The Index Value From The List\n\t\t[+] Not By Your Own :/\n\t\t\t ~ An0n 3xPloiTeR  \n"
+empty_Website: str = f"\n\t{colors.r}[=] Please Enter A Website :/\n\t\t{colors.c}~ An0n 3xPloiTeR :)"
+wrong_URL: str = f"\n\t{colors.r}[=] Please Enter a Valid And Correct URL (i.e, hackthissite.org, hack.me)\n\t\t{colors.c}~ An0n 3xPloiTeR :)"
+str_Index: str = f"\n\t{colors.r}[=] Please Input a Integer (i.e, 1, 2, 3) :\\\n\t\t{colors.c}~ An0n 3xPloiTeR :)"
+val_Select: str = f"\t{colors.r}[$] Please Use The Index Value From The List\n\t\t[+] Not By Your Own :/\n\t\t\t ~ An0n 3xPloiTeR  \n"
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
