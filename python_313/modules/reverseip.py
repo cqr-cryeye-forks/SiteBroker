@@ -4,7 +4,7 @@ import requests
 from requests.exceptions import RequestException
 
 from python_313.insides.colors import c, r, b
-from python_313.insides.functions import _headers, write, Request, removeHTTP, addHTTP
+from python_313.insides.functions import headers, write, Request, removeHTTP, addHTTP
 
 
 def reverseViaHT(website: str) -> None:
@@ -37,7 +37,7 @@ def reverseViaYGS(website: str) -> None:
         'key': ''
     }
     try:
-        request = requests.post(url, headers=_headers, data=post, timeout=5)
+        request = requests.post(url, headers=headers, data=post, timeout=5)
         request.raise_for_status()
         grab = json.loads(request.text)
         Status = grab.get('status')

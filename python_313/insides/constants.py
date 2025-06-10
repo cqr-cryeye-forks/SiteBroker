@@ -9,13 +9,20 @@ wrong_URL: str = f"\n\t{r}[=] Please Enter a Valid And Correct URL (i.e, hackthi
 str_Index: str = f"\n\t{r}[=] Please Input a Integer (i.e, 1, 2, 3) :\\\n\t\t{c}~ An0n 3xPloiTeR :)"
 val_Select: str = f"\t{r}[$] Please Use The Index Value From The List\n\t\t[+] Not By Your Own :/\n\t\t\t ~ An0n 3xPloiTeR  \n"
 
-_headers = {
+headers = {
     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Accept-Encoding': 'gzip,deflate,sdch',
     'Accept-Language': 'en-US,en;q=0.8',
     'Connection': 'keep-alive'
 }
+
+cloudflare_api_url = "http://api-docs2.hackertarget.com/httpheaders/?q="
+crimeflare_url = "http://www.crimeflare.biz/cgi-bin/cfsearch.cgi"
+browserspy_url = "http://browserspy.dk/webserver.php"
+admin_panels_url = "https://raw.githubusercontent.com/Anon-Exploiter/Rough_Work/master/admin_panels"
+shells_url = "https://raw.githubusercontent.com/Anon-Exploiter/Rough_Work/master/shells"
+
 
 subdomains = ["www", "mail", "ftp", "localhost", "webmail", "smtp", "pop", "ns1", "webdisk", "ns2", "cpanel", "whm",
               "autodiscover", "autoconfig", "m", "imap", "test", "ns", "blog", "pop3", "dev", "www2", "admin", "forum",

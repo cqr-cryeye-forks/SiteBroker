@@ -1,7 +1,7 @@
 import requests
 
 from python_313.insides.colors import *
-from python_313.insides.functions import _headers, Request, addHTTP
+from python_313.insides.functions import headers, Request, addHTTP
 
 
 def findShells(website):
@@ -13,7 +13,7 @@ def findShells(website):
         if len(_shells) != 0:
             combo = website + "/" + _shells
             try:
-                resp = requests.get(combo, timeout=5, headers=_headers, allow_redirects=False).status_code
+                resp = requests.get(combo, timeout=5, headers=headers, allow_redirects=False).status_code
                 if resp == 200:
                     print("{}{:<92}| {:<50}".format(g, combo, resp))
                 elif resp == 301:

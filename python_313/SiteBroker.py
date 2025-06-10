@@ -1,17 +1,28 @@
-from python_313.insides.colors import b, r, y, g, c, w
+#####################################################################################################
+        ################################   Importing Packages   ################################ 
+#####################################################################################################
+
+import argparse
+
+from python_313.insides.banner import banner
 from python_313.insides.footer import footer
-from python_313.insides.functions import addHTTP, write
+from python_313.insides.functions import addHTTP
+from python_313.insides.colors import r, c, b, y, g, w
 from python_313.modules.adminpanel import findAdminPanel
 from python_313.modules.banner import grabBanner
 from python_313.modules.browserspy import browserspyRep
 from python_313.modules.cloudflare import cloudflare
 from python_313.modules.crawler import googleCrawl, bingCrawl, manualCrawl
 from python_313.modules.nameservers import nameServers
-from python_313.modules.reverseip import reverseViaYGS, reverseViaHT
+from python_313.modules.reverseip import reverseViaHT, reverseViaYGS
 from python_313.modules.shells import findShells
 from python_313.modules.subdomains import findSubdomains
 from python_313.modules.webspeed import websiteSpeed
 from python_313.modules.whois import whoIS
+
+#####################################################################################################
+        ################################   Some Variables!   ################################ 
+#####################################################################################################
 
 line = "-" * 256
 
@@ -23,15 +34,9 @@ val_select = f"\t{r}[$] Please Use The Index From The List\n\t\t[+] Not By Your 
 
 str_index = f"\n{r}[-] Please Input an Integer (e.g., 1, 2, 3):\n\n"
 
-
-def get_index() -> int:
-    """Prompts user for an integer index."""
-    try:
-        index = input(f"{c}[-] Select an Option (e.g., 1, 2, 3): ")
-        return int(index)
-    except ValueError:
-        raise ValueError(str_index)
-
+#####################################################################################################
+        ################################   Built-IN Functions   ################################ 
+#####################################################################################################
 
 def print_heading(heading: str, website: str, color: str, after_web_head: str) -> None:
     """Prints a formatted heading for the scan."""
@@ -41,176 +46,155 @@ def print_heading(heading: str, website: str, color: str, after_web_head: str) -
     print(f"{color}{var}")
     print(f"{w}{'-' * length}\n")
 
-try:
-    # print(Banner)  # Ensure Banner is defined in insides
-    website = input(
-        "\n{blue}[$] Please Enter The Website You Want To Scan {red}(i.e, hackthissite.org, hack.me): {none}".format(
-            blue=b, red=r, none=y))
-    website = addHTTP(website)
+#####################################################################################################
+        ################################   Argument Parser Setup   ################################ 
+#####################################################################################################
 
-    print(
-        "\n{green}[@] What You Wanna Do With The Given Website ? \n\n1). Cloudflare Check / Bypass. \n2). Website Crawler.\n3). Reverse IP.\n4). Information Gathering.\n5). Nameservers.\n6). WebSite Speed.\n7). Subdomains Scanner.\n8). Shell Finder.\n9). Admin Panel Finder.\n10). Grab Banner.\n11). All Things.\n".format(
-            green=g))
+def parse_args() -> argparse.Namespace:
+    """Parses command-line arguments for the SiteBroker tool."""
+    parser = argparse.ArgumentParser(
+        description="SiteBroker: A website scanning tool",
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("website", help="Target website (e.g., google.com)")
 
-    index = get_index()
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--cloudflare", action="store_true", help="Check and bypass Cloudflare")
+    group.add_argument("--crawler", choices=["google", "bing", "manual", "all"], 
+                       help="Crawl website (google, bing, manual, or all)")
+    group.add_argument("--reverse-ip", choices=["ht", "ygs", "all"], 
+                       help="Perform reverse IP lookup (ht, ygs, or all)")
+    group.add_argument("--info", choices=["whois", "browserspy", "all"], 
+                       help="Gather information (whois, browserspy, or all)")
+    group.add_argument("--nameservers", action="store_true", help="Find nameservers")
+    group.add_argument("--speed", action="store_true", help="Measure website speed")
+    group.add_argument("--subdomains", action="store_true", help="Scan for subdomains")
+    group.add_argument("--shells", action="store_true", help="Find shells")
+    group.add_argument("--admin", action="store_true", help="Find admin panel")
+    group.add_argument("--banner", action="store_true", help="Grab server banner")
+    group.add_argument("--all", action="store_true", help="Run all scans")
 
-    if index == 1:
-        print_heading(heading="Checking For Cloudflare Bypass Of", website=website, after_web_head="", color=c)
-        cloudflare(website, _verbose=True)
+    return parser.parse_args()
 
-    elif index == 2:
-        print(
-            "\n{}[$] With Which Method You Wanna Crawl ?\n\n{}1). Google Based Crawler. \n{}2). Bing Based Crawler.\n{}3). Manual Crawler.\n{}4). All Things.\n".format(
-                b, g, y, c, r))
-        _index = get_index()
+#####################################################################################################
+        ################################   Main Function   ################################ 
+#####################################################################################################
 
-        if _index == 1:
+def main() -> None:
+    """Main function to run the SiteBroker scanning tool."""
+    try:
+        print(banner)  # Ensure Banner is defined in insides
+        args = parse_args()
+        website = addHTTP(args.website)
+
+        if args.cloudflare:
+            print_heading(heading="Checking For Cloudflare Bypass Of", website=website, after_web_head="", color=c)
+            cloudflare(website, _verbose=True)
+
+        elif args.crawler:
+            if args.crawler == "google":
+                print_heading(heading="Crawling", website=website, after_web_head=" Via Google", color=c)
+                googleCrawl(website)
+            elif args.crawler == "bing":
+                print_heading(heading="Crawling", website=website, after_web_head=" Via Bing (might take some time)", color=b)
+                bingCrawl(website)
+            elif args.crawler == "manual":
+                print_heading(heading="Crawling", website=website, after_web_head=" Manually", color=c)
+                manualCrawl(website)
+            elif args.crawler == "all":
+                print_heading(heading="Crawling", website=website, after_web_head=" Via Google", color=c)
+                googleCrawl(website)
+                print_heading(heading="Crawling", website=website, after_web_head=" Via Bing (might take some time)", color=b)
+                bingCrawl(website)
+                print_heading(heading="Crawling", website=website, after_web_head="Manually", color=c)
+                manualCrawl(website)
+
+        elif args.reverse_ip:
+            if args.reverse_ip == "ht":
+                print_heading(heading="Doing Reverse IP OF", website=website, after_web_head=" Via HT", color=g)
+                reverseViaHT(website)
+            elif args.reverse_ip == "ygs":
+                print_heading(heading="Doing Reverse IP OF", website=website, after_web_head=" Via YGS", color=c)
+                reverseViaYGS(website)
+            elif args.reverse_ip == "all":
+                print_heading(heading="Doing Reverse IP OF", website=website, after_web_head=" Via HT", color=g)
+                reverseViaHT(website)
+                print_heading(heading="Doing Reverse IP OF", website=website, after_web_head=" Via YGS", color=c)
+                reverseViaYGS(website)
+
+        elif args.info:
+            if args.info == "whois":
+                print_heading(heading="Doing Whois Lookup Of", website=website, after_web_head="", color=w)
+                whoIS(website)
+            elif args.info == "browserspy":
+                print_heading(heading="Generating BrowserSpyReport Of", website=website, after_web_head="", color=w)
+                browserspyRep(website)
+            elif args.info == "all":
+                print_heading(heading="Doing Whois Lookup Of", website=website, after_web_head=" Via WApi", color=w)
+                whoIS(website)
+                print_heading(heading="Generating BrowserSpyReport Of", website=website, after_web_head="", color=w)
+                browserspyRep(website)
+
+        elif args.nameservers:
+            print_heading(heading="Finding Nameservers Of", website=website, after_web_head="", color=w)
+            nameServers(website)
+
+        elif args.speed:
+            print_heading(heading="Finding Loading Speed Of", website=website, after_web_head="", color=r)
+            websiteSpeed(website)
+
+        elif args.subdomains:
+            print_heading(heading="Finding Subdomains Of", website=website, after_web_head="", color=c)
+            findSubdomains(website)
+
+        elif args.shells:
+            print_heading(heading="Finding Shells Of", website=website, after_web_head="", color=c)
+            findShells(website)
+
+        elif args.admin:
+            print_heading(heading="Finding Admin Panel Of", website=website, after_web_head="", color=c)
+            findAdminPanel(website)
+
+        elif args.banner:
+            print_heading(heading="Grabbing Banner Of", website=website, after_web_head="", color=g)
+            grabBanner(website)
+
+        elif args.all:
+            print_heading(heading="Checking For Cloudflare Bypass Of", website=website, after_web_head="", color=y)
+            cloudflare(website, _verbose=True)
             print_heading(heading="Crawling", website=website, after_web_head=" Via Google", color=c)
             googleCrawl(website)
-
-        elif _index == 2:
             print_heading(heading="Crawling", website=website, after_web_head=" Via Bing (might take some time)", color=b)
             bingCrawl(website)
-
-        elif _index == 3:
-            print_heading(heading="Crawling", website=website, after_web_head=" Manually :)", color=c)
+            print_heading(heading="Crawling", website=website, after_web_head=" Manually", color=c)
             manualCrawl(website)
-
-        elif _index == 4:
-            print_heading(heading="Crawling", website=website, after_web_head=" Via Google", color=c)
-            googleCrawl(website)
-
-            print_heading(heading="Crawling", website=website, after_web_head=" Via Bing (might take some time)", color=b)
-            bingCrawl(website)
-
-            print_heading(heading="Crawling", website=website, after_web_head=" Manually :)", color=c)
-            manualCrawl(website)
-
-        else:
-            raise ValueError(val_select)
-
-    elif index == 3:
-        print(
-            "\n{}[$] With Which Method You Wanna Do Reverse IP ?\n\n{}1). Hacker Target Based. \n{}2). YouGetSignal Based.\n{}3). All Things.\n".format(
-                b, g, y, c))
-        _index = get_index()
-
-        if _index == 1:
-            print_heading(heading="Doing Reverse IP OF", website=website, after_web_head=" Via HT <3", color=g)
+            print_heading(heading="Doing Reverse IP OF", website=website, after_web_head=" Via HT", color=g)
             reverseViaHT(website)
-
-        elif _index == 2:
-            print_heading(heading="Doing Reverse IP OF", website=website, after_web_head=" Via YGS!", color=c)
+            print_heading(heading="Doing Reverse IP OF", website=website, after_web_head=" Via YGS", color=c)
             reverseViaYGS(website)
-
-        elif _index == 3:
-            print_heading(heading="Doing Reverse IP OF", website=website, after_web_head=" Via HT <3", color=g)
-            reverseViaHT(website)
-
-            print_heading(heading="Doing Reverse IP OF", website=website, after_web_head=" Via YGS!", color=c)
-            reverseViaYGS(website)
-
-        else:
-            raise ValueError(val_select)
-
-    elif index == 4:
-        print(
-            "\n{}[$] With Which Method You Wanna Do Information Gathering ?\n\n{}1). Whois Lookup. \n{}2). BrowserSpy Report.\n{}3). All Things.\n".format(
-                g, b, y, c))
-        _index = get_index()
-
-        if _index == 1:
-            print_heading(heading="Doing Whois Lookup OF", website=website, after_web_head="", color=w)
+            print_heading(heading="Doing Whois Lookup Of", website=website, after_web_head=" Via WApi", color=w)
             whoIS(website)
-
-        elif _index == 2:
             print_heading(heading="Generating BrowserSpyReport Of", website=website, after_web_head="", color=w)
             browserspyRep(website)
+            print_heading(heading="Finding Nameservers Of", website=website, after_web_head="", color=w)
+            nameServers(website)
+            print_heading(heading="Finding Loading Speed Of", website=website, after_web_head="", color=r)
+            websiteSpeed(website)
+            print_heading(heading="Finding Subdomains Of", website=website, after_web_head="", color=c)
+            findSubdomains(website)
+            print_heading(heading="Finding Shells Of", website=website, after_web_head="", color=c)
+            findShells(website)
+            print_heading(heading="Finding Admin Panel Of", website=website, after_web_head="", color=c)
+            findAdminPanel(website)
+            print_heading(heading="Grabbing Banner Of", website=website, after_web_head="", color=g)
+            grabBanner(website)
 
-        elif _index == 3:
-            print_heading(heading="Doing Whois Lookup OF", website=website, after_web_head="", color=w)
-            whoIS(website)
+        print(footer)  # Ensure Footer is defined in insides
 
-            print_heading(heading="Generating BrowserSpyReport Of", website=website, after_web_head="", color=w)
-            browserspyRep(website)
+    except KeyboardInterrupt:
+        print(f"{w}[-] Err0r: User Interrupted!")
+    except Exception as e:
+        print(f"{r}[-] Err0r: Kindly Report the error below to An0n3xPloiTeR :)\n\"\"\"\n{str(e)}\n\"\"\"")
 
-        else:
-            raise ValueError(val_select)
-
-    elif index == 5:
-        print_heading(heading="Finding Nameservers Of", website=website, after_web_head="", color=w)
-        nameServers(website)
-
-    elif index == 6:
-        print_heading(heading="Finding Loading Speed Of", website=website, after_web_head="", color=r)
-        websiteSpeed(website)
-
-    elif index == 7:
-        print_heading(heading="Finding SubDomains Of", website=website, after_web_head="", color=c)
-        findSubdomains(website)
-
-    elif index == 8:
-        print_heading(heading="Finding Shells Of", website=website, after_web_head="", color=c)
-        findShells(website)
-
-    elif index == 9:
-        print_heading(heading="Finding Admin Panel Of", website=website, after_web_head="", color=c)
-        findAdminPanel(website)
-
-    elif index == 10:
-        print_heading(heading="Grabbing Banner Of", website=website, after_web_head="", color=g)
-        grabBanner(website)
-
-    elif index == 11:
-        print_heading(heading="Checking For Cloudflare Bypass Of", website=website, after_web_head="", color=y)
-        cloudflare(website, _verbose=True)
-
-        print_heading(heading="Crawling", website=website, after_web_head=" Via Google", color=c)
-        googleCrawl(website)
-
-        print_heading(heading="Crawling", website=website, after_web_head=" Via Bing (might take some time)", color=b)
-        bingCrawl(website)
-
-        print_heading(heading="Crawling", website=website, after_web_head=" Manually :)", color=c)
-        manualCrawl(website)
-
-        print_heading(heading="Doing Reverse IP OF", website=website, after_web_head=" Via HT <3", color=g)
-        reverseViaHT(website)
-
-        print_heading(heading="Doing Reverse IP OF", website=website, after_web_head=" Via YGS!", color=c)
-        reverseViaYGS(website)
-
-        print_heading(heading="Doing Whois Lookup OF", website=website, after_web_head=" Via WApi", color=w)
-        whoIS(website)
-
-        print_heading(heading="Generating BrowserSpyReport Of", website=website, after_web_head="", color=w)
-        browserspyRep(website)
-
-        print_heading(heading="Finding Nameservers Of", website=website, after_web_head="", color=w)
-        nameServers(website)
-
-        print_heading(heading="Finding Loading Speed Of", website=website, after_web_head="", color=r)
-        websiteSpeed(website)
-
-        print_heading(heading="Finding SubDomains Of", website=website, after_web_head="", color=c)
-        findSubdomains(website)
-
-        print_heading(heading="Finding Shells Of", website=website, after_web_head="", color=c)
-        findShells(website)
-
-        print_heading(heading="Finding Admin Panel Of", website=website, after_web_head="", color=c)
-        findAdminPanel(website)
-
-        print_heading(heading="Grabbing Banner Of", website=website, after_web_head="", color=g)
-        grabBanner(website)
-
-    else:
-        raise ValueError(val_select)
-
-except KeyboardInterrupt:
-    write(var="~", color=w, data="Err0r: User Interrupted!")
-except Exception as e:
-    write(var="#", color=r,
-          data=f"Err0r: Kindly Report the err0r below to An0n 3xPloiTeR :) (If Your Internet's Working ;)\n\"\"\"\n{str(e)}\n\"\"\"")
-
-print(footer)  # Ensure Footer is defined in insides
+if __name__ == "__main__":
+    main()

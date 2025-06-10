@@ -6,7 +6,7 @@ import requests
 from requests.exceptions import RequestException
 
 from python_313.insides.colors import g, c
-from python_313.insides.functions import _headers, write, addHTTP
+from python_313.insides.functions import headers, write, addHTTP
 
 
 def websiteSpeed(website: str) -> None:
@@ -22,7 +22,7 @@ def websiteSpeed(website: str) -> None:
         write(var="~", color=g, data=_dns)
 
         start = time.time()
-        _data = requests.get(website, headers=_headers, timeout=5).content
+        _data = requests.get(website, headers=headers, timeout=5).content
         load_tm = time.time() - start
         _load = "{:<10}:{:>40} seconds".format(" Load", load_tm)
         _wo = "{:<10}:{:>40} seconds".format(" W/O DNS", load_tm - dns_tm)

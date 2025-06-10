@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from requests.exceptions import RequestException
 
 from python_313.insides.colors import c, g
-from python_313.insides.functions import _headers, write, Request, removeHTTP, addHTTP
+from python_313.insides.functions import headers, write, Request, removeHTTP, addHTTP
 
 
 def googleCrawl(website: str) -> None:
@@ -16,7 +16,7 @@ def googleCrawl(website: str) -> None:
     for loop in range(0, 10):
         url = "https://google.com/search?q=" + str(search) + "&ie=utf-8&oe=utf-8&aq=t&start=" + str(loop) + "0"
         try:
-            request = requests.get(url, headers=_headers, timeout=5)
+            request = requests.get(url, headers=headers, timeout=5)
             request.raise_for_status()
             content = request.text
             soup = BeautifulSoup(content, 'lxml')
@@ -37,7 +37,7 @@ def bingCrawl(website: str) -> None:
     for loop in range(0, 50):
         url = "http://www.bing.com/search?q=" + str(search) + "&first=" + str(loop) + "0"
         try:
-            request = requests.get(url, headers=_headers, timeout=5)
+            request = requests.get(url, headers=headers, timeout=5)
             request.raise_for_status()
             content = request.text
             links = re.findall(r'<a\shref="(.*?)"\sh="(.*?)">', content)

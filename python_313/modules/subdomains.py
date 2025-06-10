@@ -2,7 +2,7 @@ import requests
 from requests.exceptions import RequestException
 
 from python_313.insides.colors import c, g, r
-from python_313.insides.functions import _headers, removeHTTP, addHTTP
+from python_313.insides.functions import headers, removeHTTP, addHTTP
 from python_313.insides.constants import subdomains
 
 
@@ -15,7 +15,7 @@ def findSubdomains(website: str) -> None:
             combo = f"{_sub}.{website}"
             combo = addHTTP(combo)
             try:
-                resp = requests.get(combo, timeout=5, headers=_headers).status_code
+                resp = requests.get(combo, timeout=5, headers=headers).status_code
                 if resp != 404:
                     print("{}{:<62}| {:<50}".format(g, combo, resp))
                 else:

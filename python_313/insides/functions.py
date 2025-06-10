@@ -4,7 +4,8 @@ import requests
 from requests.exceptions import RequestException
 
 from python_313.insides.colors import fc, fg, sb, w, g
-from python_313.insides.constants import url_pattern, wrong_URL, empty_Website, _headers
+from python_313.insides.constants import url_pattern, wrong_URL, empty_Website, headers
+
 
 def webNotEmpty(website: str) -> str:
     """Проверяет, не пустой ли URL."""
@@ -49,7 +50,7 @@ def write(var: Optional[str], color: str, data: str) -> None:
 def Request(website: str, _timeout: Optional[int] = None, _encode: Optional[bool] = None) -> Optional[Union[str, bytes]]:
     """Выполняет HTTP-запрос к сайту."""
     try:
-        response = requests.get(website, headers=_headers, timeout=_timeout)
+        response = requests.get(website, headers=headers, timeout=_timeout)
         response.raise_for_status()
         if _encode is None:
             return response.content

@@ -2,7 +2,8 @@ import requests
 from requests.exceptions import RequestException
 
 from python_313.insides.colors import c, g, r
-from python_313.insides.functions import _headers, Request, addHTTP, write
+from python_313.insides.constants import headers
+from python_313.insides.functions import Request, addHTTP, write
 
 
 def findAdminPanel(website: str) -> None:
@@ -20,7 +21,7 @@ def findAdminPanel(website: str) -> None:
             if len(_panels) != 0:
                 combo = website + "/" + _panels
                 try:
-                    resp = requests.get(combo, timeout=5, headers=_headers, allow_redirects=False).status_code
+                    resp = requests.get(combo, timeout=5, headers=headers, allow_redirects=False).status_code
                     if resp == 200:
                         print("{}{:<92}| {:<50}".format(g, combo, resp))
                     elif resp == 301:
