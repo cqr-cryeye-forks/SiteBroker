@@ -1,11 +1,8 @@
-
-
-from colorama import init,Fore,Back,Style
 import os
 
+from colorama import init, Fore, Back, Style
 
 if os.name == "posix":
-    # colors foreground text:
     fc = "\033[0;96m"
     fg = "\033[0;92m"
     fw = "\033[0;97m"
@@ -14,7 +11,6 @@ if os.name == "posix":
     fy = "\033[0;33m"
     fm = "\033[0;35m"
 
-    # colors background text:
     bc = "\033[46m"
     bg = "\033[42m"
     bw = "\033[47m"
@@ -23,7 +19,6 @@ if os.name == "posix":
     by = "\033[43m"
     bm = "\033[45m"
 
-    # colors style text:
     sd = Style.DIM
     sn = Style.NORMAL
     sb = Style.BRIGHT
@@ -36,9 +31,7 @@ if os.name == "posix":
     y = fy + sb
     m = fm + sb
 else:
-    ## ----------------------------------------------------------------------------------------------------------------------  ##
     init(autoreset=True)
-    # colors foreground text:
     fc = Fore.CYAN
     fg = Fore.GREEN
     fw = Fore.WHITE
@@ -46,9 +39,7 @@ else:
     fb = Fore.BLUE
     fy = Fore.YELLOW
     fm = Fore.MAGENTA
-    
 
-    # colors background text:
     bc = Back.CYAN
     bg = Back.GREEN
     bw = Back.WHITE
@@ -57,7 +48,6 @@ else:
     by = Fore.YELLOW
     bm = Fore.MAGENTA
 
-    # colors style text:
     sd = Style.DIM
     sn = Style.NORMAL
     sb = Style.BRIGHT
@@ -69,4 +59,3 @@ else:
     b = fb + sb
     y = fy + sb
     m = fm + sb
-    ## ----------------------------------------------------------------------------------------------------------------------  ##

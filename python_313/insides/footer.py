@@ -1,16 +1,6 @@
+from colors import w, g, c, b, r
 
-
-from colors import *
-
-footer = """
-  {white}[{green}${white}] {cyan}Thanks For Using {white}:D
-\t{blue}~ {red}An0n 3xPloiTeR {white}:)
-""".format(
-        white = w,
-        green = g,
-        cyan = c,
-        blue = b,
-        red = r
-    )
-
-# print footer
+footer = f"""
+  {w}[{g}${w}] {c}Thanks For Using {w}:D
+\t{b}~ {r}An0n 3xPloiTeR {w}:)
+"""
